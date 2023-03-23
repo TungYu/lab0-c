@@ -29,25 +29,105 @@ void q_free(struct list_head *head)
 /* Insert an element at head of queue */
 bool q_insert_head(struct list_head *head, char *s)
 {
+    element_t *node = NULL;
+
+    if (!head || !s)
+        return false;
+
+    size_t slen;
+    node = malloc(sizeof(element_t));
+    if (!node)
+        return false;
+    INIT_LIST_HEAD(&node->list);
+    slen = strlen(s);
+    node->value = malloc(slen + 1);
+    if (!node->value) {
+        free(node);
+        return false;
+    }
+    memcpy(node->value, s, slen);
+    node->value[slen] = '\0';
+    list_add(&node->list, head);
+
     return true;
 }
 
 /* Insert an element at tail of queue */
 bool q_insert_tail(struct list_head *head, char *s)
 {
+    element_t *node = NULL;
+
+    if (!head || !s)
+        return false;
+
+    size_t slen;
+    node = malloc(sizeof(element_t));
+    if (!node)
+        return false;
+    INIT_LIST_HEAD(&node->list);
+    slen = strlen(s);
+    node->value = malloc(slen + 1);
+    if (!node->value) {
+        free(node);
+        return false;
+    }
+    memcpy(node->value, s, slen);
+    node->value[slen] = '\0';
+    list_add_tail(&node->list, head);
+
     return true;
 }
 
 /* Remove an element from head of queue */
 element_t *q_remove_head(struct list_head *head, char *sp, size_t bufsize)
 {
-    return NULL;
+    if (!head)
+        return NULL;
+
+    /* Check the sp size is less than bufsize */
+    if (sp != NULL) {
+        size_t splen = sizeof(sp);
+        bufsize = (bufsize < splen) ? bufsize : splen;
+    }
+
+    /* Get string from the element */
+    element_t *node = list_first_entry(head, element_t, list);
+    char *s = node->value;
+    if (bufsize && s) {
+        size_t slen = strlen(s);
+        size_t len = (bufsize <= slen) ? (bufsize - 1) : slen;
+        memcpy(sp, s, len);
+        sp[len] = '\0';
+    }
+
+    list_del_init(&node->list);
+    return node;
 }
 
 /* Remove an element from tail of queue */
 element_t *q_remove_tail(struct list_head *head, char *sp, size_t bufsize)
 {
-    return NULL;
+    if (!head)
+        return NULL;
+
+    /* Check the sp size is less than bufsize */
+    if (sp != NULL) {
+        size_t splen = sizeof(sp);
+        bufsize = (bufsize < splen) ? bufsize : splen;
+    }
+
+    /* Get string from the element */
+    element_t *node = list_first_entry(head, element_t, list);
+    char *s = node->value;
+    if (bufsize && s) {
+        size_t slen = strlen(s);
+        size_t len = (bufsize <= slen) ? bufsize - 1 : slen;
+        memcpy(sp, s, len);
+        sp[len] = '\0';
+    }
+
+    list_del_init(&node->list);
+    return node;
 }
 
 /* Return number of elements in queue */
