@@ -14,11 +14,17 @@
 /* Create an empty queue */
 struct list_head *q_new()
 {
-    return NULL;
+    struct list_head *new_queue = malloc(sizeof(struct list_head));
+    INIT_LIST_HEAD(new_queue);
+    return new_queue;
 }
 
 /* Free all storage used by queue */
-void q_free(struct list_head *head) {}
+void q_free(struct list_head *head)
+{
+    if (head != NULL)
+        free(head);
+}
 
 /* Insert an element at head of queue */
 bool q_insert_head(struct list_head *head, char *s)
