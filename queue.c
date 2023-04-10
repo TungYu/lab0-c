@@ -136,12 +136,13 @@ int q_size(struct list_head *head)
     if (!head)
         return -1;
 
-    struct list_head **p = &head;
-    queue_contex_t *qctx = list_entry(p, queue_contex_t, q);
-    if (qctx)
-        return qctx->size;
+    struct list_head *curr, *next;
+    int size = 0;
 
-    return -1;
+    list_for_each_safe (curr, next, head)
+        size += 1;
+
+    return size;
 }
 
 /* Delete the middle node in queue */
