@@ -170,8 +170,8 @@ bool q_delete_mid(struct list_head *head)
         slow = slow->next;
     }
 
-    /* Delete nothing when only one node is in the queue */
-    if (fast == slow)
+    /* Queue is empty */
+    if (slow == head)
         return false;
 
     list_del_init(slow);
