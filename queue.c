@@ -125,7 +125,7 @@ element_t *q_remove_tail(struct list_head *head, char *sp, size_t bufsize)
     }
 
     /* Get string from the element */
-    element_t *node = list_first_entry(head, element_t, list);
+    element_t *node = list_last_entry(head, element_t, list);  // callback
     char *s = node->value;
     if (bufsize && s) {
         size_t slen = strlen(s);
@@ -187,14 +187,39 @@ bool q_delete_mid(struct list_head *head)
 /* Delete all nodes that have duplicate string */
 bool q_delete_dup(struct list_head *head)
 {
-    // https://leetcode.com/problems/remove-duplicates-from-sorted-list-ii/
+    if (!head)
+        return false;
+
+
     return true;
 }
 
 /* Swap every two adjacent nodes */
 void q_swap(struct list_head *head)
 {
-    // https://leetcode.com/problems/swap-nodes-in-pairs/
+    if (!head)
+        return;
+#if 0
+    struct list_head *prev, *curr, *next, **new_curr;
+    curr = head->next;
+
+    while (curr && curr->next != head) {
+        next = curr->next;
+        curr->next = next->next;
+        next->next = curr;
+
+        if (curr == head->next) {
+            new_curr = &curr;
+            *new_curr = next;
+        } else {
+            prev->next = next;
+        }
+
+        prev = curr;
+        curr = curr->next;
+    }
+#endif
+    return;
 }
 
 /* Reverse elements in queue */
