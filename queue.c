@@ -19,7 +19,7 @@ void q_free(struct list_head *head)
         return;
 
     element_t *item = NULL, *tmp = NULL;
-    list_for_each_entry_safe (item, tmp, head, list) {
+    list_for_each_entry_safe(item, tmp, head, list) {
         free(item->value);
         free(item);
     }
@@ -118,7 +118,7 @@ element_t *q_remove_tail(struct list_head *head, char *sp, size_t bufsize)
     }
 
     /* Get string from the element */
-    element_t *node = list_first_entry(head, element_t, list);
+    element_t *node = list_last_entry(head, element_t, list);  // callback
     char *s = node->value;
     if (bufsize && s) {
         size_t slen = strlen(s);
@@ -140,7 +140,7 @@ int q_size(struct list_head *head)
     struct list_head *curr, *next;
     int size = 0;
 
-    list_for_each_safe (curr, next, head)
+    list_for_each_safe(curr, next, head)
         size += 1;
 
     return size;
