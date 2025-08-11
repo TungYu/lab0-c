@@ -208,11 +208,10 @@ void q_reverse(struct list_head *head)
     if (!head || list_is_singular(head))
         return;
 
-    struct list_head *curr, *center;
+    struct list_head *curr;
 
-    for (center = head->next, curr = head->next->next;
-         center != head && curr != head; curr = center->next) {
-        list_move(curr, head);
+    for (curr = head->next; curr->next != head;) {
+        list_move(curr->next, head);
     }
     return;
 }
