@@ -4,6 +4,20 @@
 
 #include "queue.h"
 
+
+unsigned int list_number(struct list_head *head)
+{
+    struct list_head *curr, *next;
+    unsigned int size = 0;
+
+    list_for_each_safe(curr, next, head)
+        size += 1;
+
+    return size;
+}
+
+/************************************************************************************/
+
 /* Create an empty queue */
 struct list_head *q_new()
 {
@@ -243,6 +257,34 @@ void q_reverse(struct list_head *head)
 void q_reverseK(struct list_head *head, int k)
 {
     // https://leetcode.com/problems/reverse-nodes-in-k-group/
+    if (!head || list_is_singular(head))
+        return;
+
+    if (k <= 1)
+        return;
+
+    LIST_HEAD(tmp);
+    LIST_HEAD(new_head);
+
+    struct list_head *tail;
+    int i;
+    int size = list_number(head);
+
+    for (i = 0; i < size; i = i + k) {
+        int j = 1;
+        list_for_each(tail, head) {
+            if (j == k)
+                break;
+            j++;
+        }
+
+        list_cut_position(&tmp, head, tail);
+        q_reverse(&tmp);
+        list_splice_tail(&tmp, &new_head);
+    }
+    list_splice(&new_head, head);
+
+    return;
 }
 
 /* Sort elements of queue in ascending/descending order */
