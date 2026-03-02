@@ -224,7 +224,7 @@ bool q_delete_dup(struct list_head *head)
 /* Swap every two adjacent nodes */
 void q_swap(struct list_head *head)
 {
-    if (!head)
+    if (!head || list_is_singular(head))
         return;
 
     struct list_head *curr;
