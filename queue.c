@@ -295,7 +295,39 @@ void q_sort(struct list_head *head, bool descend) {}
 int q_ascend(struct list_head *head)
 {
     // https://leetcode.com/problems/remove-nodes-from-linked-list/
-    return 0;
+
+    if (!head || list_empty(head))
+        return 0;
+
+    if (list_is_singular(head))
+        return 1;
+
+    /*
+     * Delete nodes that have a strictly smaller value somewhere to their
+     * right. Scan from right to left and keep a running suffix minimum.
+     */
+    struct list_head *curr = head->prev;
+    element_t *tail = list_entry(curr, element_t, list);
+    const char *min = tail->value ? tail->value : "";
+
+    curr = curr->prev;
+    while (curr != head) {
+        struct list_head *prev = curr->prev;
+        element_t *item = list_entry(curr, element_t, list);
+        const char *item_val = item->value ? item->value : "";
+
+        if (strcmp(item_val, min) > 0) {
+            list_del_init(curr);
+            free(item->value);
+            free(item);
+        } else {
+            min = item_val;
+        }
+
+        curr = prev;
+    }
+
+    return q_size(head);
 }
 
 /* Remove every node which has a node with a strictly greater value anywhere to
@@ -303,7 +335,38 @@ int q_ascend(struct list_head *head)
 int q_descend(struct list_head *head)
 {
     // https://leetcode.com/problems/remove-nodes-from-linked-list/
-    return 0;
+    if (!head || list_empty(head))
+        return 0;
+
+    if (list_is_singular(head))
+        return 1;
+
+    /*
+     * Delete nodes that have a strictly greater value somewhere to their
+     * right. Scan from right to left and keep a running suffix maximum.
+     */
+    struct list_head *curr = head->prev;
+    element_t *tail = list_entry(curr, element_t, list);
+    const char *max = tail->value ? tail->value : "";
+
+    curr = curr->prev;
+    while (curr != head) {
+        struct list_head *prev = curr->prev;
+        element_t *item = list_entry(curr, element_t, list);
+        const char *item_val = item->value ? item->value : "";
+
+        if (strcmp(item_val, max) < 0) {
+            list_del_init(curr);
+            free(item->value);
+            free(item);
+        } else {
+            max = item_val;
+        }
+
+        curr = prev;
+    }
+
+    return q_size(head);
 }
 
 /* Merge all the queues into one sorted queue, which is in ascending/descending
